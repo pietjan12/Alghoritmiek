@@ -9,12 +9,10 @@ namespace Circustrein.Tests
     [TestClass]
     public class LogicTests
     {
-        private AnimalsRepository _animalRepository;
         private AnimalService _AnimalService;
         private List<Animal> animals;
 
         public LogicTests() {
-            _animalRepository = new AnimalsRepository();
             _AnimalService = new AnimalService();
         }
 
@@ -77,7 +75,6 @@ namespace Circustrein.Tests
         public void TestWagonDoesNotHaveRoom()
         {
             Wagon w = new Wagon();
-
             Animal a = new Animal();
             a.animalSize = AnimalSize.Groot;
             a.points = 5;
@@ -91,17 +88,13 @@ namespace Circustrein.Tests
 
             Animal a3 = new Animal();
             a3.animalSize = AnimalSize.Klein;
+            a3.points = 1;
 
             Assert.AreEqual(false, _AnimalService.WagonHasRoom(w, a3));
         }
 
         [TestMethod]
         public void TestAddTwoPlantEaters() {
-            //Maken
-            Wagon w = new Wagon();
-
-            //GAAT FOUT DOOR DE PUNTEN?
-
             Animal a = new Animal();
             a.foodType = FoodType.Planten;
             a.animalSize = AnimalSize.Groot;
@@ -119,7 +112,46 @@ namespace Circustrein.Tests
             Trein t = _AnimalService.PerformAlghoritm();
 
             Assert.AreEqual(1, t.wagons.Count);
+        }
 
+        [TestMethod]
+        public void TestAddMediumMeatLargePlant()
+        {
+            Animal a = new Animal();
+            a.foodType = FoodType.Vlees;
+            a.animalSize = AnimalSize.Middel;
+            a.points = 3;
+
+            Animal a2 = new Animal();
+            a2.foodType = FoodType.Planten;
+            a2.animalSize = AnimalSize.Groot;
+            a2.points = 5;
+
+            _AnimalService.AddAnimal(a);
+            _AnimalService.AddAnimal(a2);
+
+            Trein t = _AnimalService.PerformAlghoritm();
+            Assert.AreEqual(1, t.wagons.Count);
+        }
+
+        [TestMethod]
+        public void TestAddLargeMeatLargePlant()
+        {
+            Animal a = new Animal();
+            a.foodType = FoodType.Vlees;
+            a.animalSize = AnimalSize.Groot;
+            a.points = 5;
+
+            Animal a2 = new Animal();
+            a2.foodType = FoodType.Planten;
+            a2.animalSize = AnimalSize.Groot;
+            a2.points = 5;
+
+            _AnimalService.AddAnimal(a);
+            _AnimalService.AddAnimal(a2);
+
+            Trein t = _AnimalService.PerformAlghoritm();
+            Assert.AreEqual(2, t.wagons.Count);
         }
     }
 }
